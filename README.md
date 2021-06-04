@@ -1,4 +1,4 @@
-# burpbackup backup automatization script (BURP BACKUP CLIENT)
+# burpbackup backup automation script (BURP BACKUP CLIENT)
 (c) Frank Soyer <frank.soyer@gmail.com> 2021
 
 Changelog :
