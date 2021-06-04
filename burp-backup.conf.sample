@@ -1,0 +1,78 @@
+# burp-backup sh script configuration file
+# v0.1
+# --------------------------------------
+# SOME GLOBAL VARIABLES
+# --------------------------------------
+# Uncomment and change this if it needs non-default values (see .sh script for default ones)
+#MAILBIN="/usr/bin/mail -s"
+#MYDB="mysql --execute 'show databases\G' --password=$MYSQL_PASSWORD | grep -v row | sed -e 's/Database: //g' | grep -v mysql | grep -v information_schema | grep -v performance_schema"
+# Or : you can list manually the databases, one by line inside the quotes, e.g :
+# MYDB='<mysql_db_name1>
+# <mysql_db_name2>'
+#MYSQLDUMP_OPTS="--routines"
+#PGDB="su - postgres -c 'psql -l --pset tuples_only' | awk '{print \$1}' | grep -v ^$ | grep -v template | grep -v : | grep -v '|'"
+# Or : you can list manually the databases, one by line inside the quotes, e.g :
+# PGDB='<pgsql_db_name1>
+# <pgsql_db_name2>'
+#PGSQLDUMP_OPTS=""
+# --------------------------------------
+# Mails destination
+# --------------------------------------
+# If more than one mail address needed : MAIL_ADMIN="admin1@domain.com admin2@domain.com"
+MAIL_ADMIN=admin1@domain.com
+# Mail on errors are always sent, must we sent mail on success ? (Default: yes)
+MAIL_IF_SUCCESS=1
+# --------------------------------------
+# Some file names
+# --------------------------------------
+# Path where are burp-backup.sh and .conf (default: same directory as script)
+SCRIPT_DIR=$(dirname $0)
+# LOG and other files
+LOG_FILE=burp-backup.log
+PID_FILE=burp-backup.pid
+# Script to launch BEFORE backup
+PRESCRIPT=
+# Script to launch AFTER backup
+POSTSCRIPT=
+# --------------------------------------
+# Databases backups
+# --------------------------------------
+# Change JOUR format to change DB backups retention. Ex : $(date +%w) keeps a week, $(date +%d) keeps one month.
+#JOUR=$(date +%w)
+# Specific path for mysql dumps, ldap dumps (on local or on remote server)
+DUMP_DIR=/home/backup
+# Stop Apache before dumping databases ? Yes if STOPAPACHE=1
+STOPAPACHE=0
+# --------------------------------------
+# MySQL dump
+# --------------------------------------
+# Default: disabled (MYSQLDUMP=0)
+MYSQLDUMP=0 
+# Be aware ! This conf file must be protected as it contains clear mysql password
+# TODO : how to avoid this password in clear text ?
+# NOTE : quote password with simple quotes + escape reserved chars ($,...)
+MYSQL_PASSWORD='Mot_de_passe_MySQL'
+# Encrypt the dump file if MYENCRYPT=1. If 1, don't forget to initialize a password in MYENCPASS.
+MYENCRYPT=0
+# MYENCPASS=""
+# --------------------------------------
+# PostgreSQL dump
+# --------------------------------------
+# Default: disabled (PGSQLDUMP=0)
+PGSQLDUMP=0
+# --------------------------------------
+# LDAP dump
+# --------------------------------------
+# Default: disabled (SLAPCAT=0)
+SLAPCAT=0
+# --------------------------------------
+# SOGO backup
+# --------------------------------------
+# Default: disabled (SOGOBACKUP=0)
+SOGOBACKUP=0
+# --------------------------------------
+# stop/start STOPSEAFILE if needed
+# --------------------------------------
+# Default: disabled (STOPSEAFILE=0)
+STOPSEAFILE=0
+
