@@ -226,6 +226,8 @@ then
          fi
       else
          echo "Programme SLAPCAT introuvable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
+         ERRORS="Programme SLAPCAT introuvable !"
+         ERROR_FLAG=1
       fi
    fi
 
@@ -255,6 +257,8 @@ then
          fi
       else
          echo "Programme SOGO-TOOL introuvable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
+         ERRORS="Programme SOGO-TOOL introuvable !"
+         ERROR_FLAG=1
       fi
    fi
 
