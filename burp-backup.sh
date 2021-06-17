@@ -272,6 +272,8 @@ then
       fi
    else
       echo "Programme BURP introuvable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
+      ERRORS="Programme BURP introuvable !"
+      ERROR_FLAG=1
    fi
 
    if [ $STOPSEAFILE -eq 1 ]
