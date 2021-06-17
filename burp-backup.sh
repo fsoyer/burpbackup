@@ -1,6 +1,7 @@
 #!/bin/bash
 # Burp-backup Script (BURP BACKUP CLIENT)
 # v0.1
+# Pre-requisite : burp-client installed, client delared on server, /etc/bur/burp.conf set with client name,password and server ip
 # See README.md for details
 # (c) 2021, Frank Soyer <frank.soyer@gmail.com>
 
@@ -76,7 +77,7 @@ fi
 if [ ! "$PGDB" -a "$PGSQLDUMP" -eq 1 ]
 then
    # Find which databases to dump, each in an individual dump file
-   PGDB="su - postgres -c 'psql -l --pset tuples_only' | awk '{print \$1}' | grep -v ^$ | grep -v template | grep -v : | grep -v '|'"
+   PGDB="su - postgres -c 'psql -l --pset tuples_only' | awk '{print $1}' | grep -v ^$ | grep -v template | grep -v : | grep -v '|'"
 fi
 
 if [ ! -e $SCRIPT_DIR/$PID_FILE ]
@@ -114,7 +115,7 @@ then
       systemctl stop seahub
       systemctl stop seafile
       echo "Running Seafile garbage collector" >> $SCRIPT_DIR/$LOG_FILE
-      su - seafile -c 'seafile-server-latest/seaf-gc.sh; exit \$?'  >> $SCRIPT_DIR/$LOG_FILE
+      su - seafile -c 'seafile-server-latest/seaf-gc.sh; exit $?'  >> $SCRIPT_DIR/$LOG_FILE
       ERROR=$?
       if [ $ERROR -ne 0 ]
       then
