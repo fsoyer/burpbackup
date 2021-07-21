@@ -72,7 +72,7 @@ fi
 if [ ! "$MYDB" -a "$MYSQLDUMP" -eq 1 ]
 then
    # Find which databases to dump, each in an individual dump file
-   MYDB="mysql --execute 'show databases\G' --password=$MYSQL_PASSWORD | grep -v row | sed -e 's/Database: //g' | grep -v mysql | grep -v information_schema | grep -v performance_schema"
+   MYDB="mysql --execute 'show databases\G' --password='$MYSQL_PASSWORD' | grep -v row | sed -e 's/Database: //g' | grep -v mysql | grep -v information_schema | grep -v performance_schema"
 fi
 if [ ! "$PGDB" -a "$PGSQLDUMP" -eq 1 ]
 then
