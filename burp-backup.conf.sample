@@ -39,7 +39,7 @@ STOPAPACHE=0
 # <mysql_db_name2>'
 MYSQLDUMP_OPTS="--routines"
 # Default: disabled (MYSQLDUMP=0)
-MYSQLDUMP=0 
+MYSQLDUMP=0
 # Be aware ! This conf file must be protected as it contains clear mysql password
 # TODO : how to avoid this password in clear text ?
 # NOTE : quote password with simple quotes

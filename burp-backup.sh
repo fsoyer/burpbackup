@@ -271,8 +271,22 @@ then
       ERROR=$?
       if [ $ERROR -ne 0 ]
       then
-         ERRORS="$ERRORS $ERROR:"
-         ERROR_FLAG=1
+      # in case of SSH connection error, retry it
+         grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE
+         if [ $? -eq 0 ]
+         then
+            sleep 20
+            $BURPBIN -a b >> $SCRIPT_DIR/$LOG_FILE 2>&1
+            ERROR=$?
+            if [ $ERROR -ne 0 ]
+            then
+               ERRORS="$ERRORS ${ERROR}:"
+               ERROR_FLAG=1
+            fi
+         else
+            ERRORS="$ERRORS ${ERROR}:"
+            ERROR_FLAG=1
+         fi
       fi
    else
       echo "Programme BURP introuvable !" >> $SCRIPT_DIR/$LOG_FILE 2>&1
