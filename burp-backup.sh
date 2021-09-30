@@ -275,7 +275,7 @@ then
          grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE
          if [ $? -eq 0 ]
          then
-            sleep 20
+            sleep $((10 + RANDOM % 20));
             $BURPBIN -a b >> $SCRIPT_DIR/$LOG_FILE 2>&1
             ERROR=$?
             if [ $ERROR -ne 0 ]
