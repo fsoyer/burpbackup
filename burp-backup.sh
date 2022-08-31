@@ -267,25 +267,28 @@ then
    BURPBIN=$(which burp)
    if [ ! -z "$BURPBIN" ]
    then
+      i=1
+      echo "Backup try $i" >> $SCRIPT_DIR/$LOG_FILE
       $BURPBIN -a b >> $SCRIPT_DIR/$LOG_FILE 2>&1
       ERROR=$?
       if [ $ERROR -ne 0 ]
       then
-      # in case of SSH connection error, retry it
-         grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE
-         if [ $? -eq 0 ]
+      # in case of SSH connection error, retry it max 5 times, else exit
+         SSL_ERROR=`grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE > /dev/null && echo 0 || echo 1`
+         if [ $SSL_ERROR -eq 1 ]
          then
-            sleep $((60 + RANDOM % 120));
-            $BURPBIN -a b >> $SCRIPT_DIR/$LOG_FILE 2>&1
-            ERROR=$?
-            if [ $ERROR -ne 0 ]
-            then
-               ERRORS="$ERRORS ${ERROR}:"
-               ERROR_FLAG=1
-            fi
-         else
             ERRORS="$ERRORS ${ERROR}:"
             ERROR_FLAG=1
+         else
+             while [ $SSL_ERROR -eq 0 -a $i -lt 5 ]
+             do
+                i=$((i+1))
+                echo "Backup try $i" >> $SCRIPT_DIR/$LOG_FILE
+                sed -i '/SSL connect error/d' $SCRIPT_DIR/$LOG_FILE
+                sleep $((120 + RANDOM % 360));
+                $BURPBIN -a b >> $SCRIPT_DIR/$LOG_FILE 2>&1
+                SSL_ERROR=`grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE > /dev/null && echo 0 || echo 1`
+             done
          fi
       fi
    else
