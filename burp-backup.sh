@@ -21,7 +21,7 @@
 ERROR_FLAG=0
 ERROR=0
 ERRORS="ERREURS: "
-RETRY=6
+RETRY=10
 
 # Initialize global variables (can be overwritten in .conf file)
 # --------------------------------------
