@@ -277,7 +277,7 @@ then
       # in case of SSH connection error, retry it max 5 times, else exit
          SSL_ERROR=`grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE > /dev/null && echo 0 || echo 1`  # 1 for grep means "not found"
          WAIT=0
-         while [ $SSL_ERROR -eq 0 -a $i -lt $RETRY ]
+         while [ $SSL_ERROR -eq 0 -a $i -le $RETRY ]
          do
             i=$((i+1))
             echo "Backup try $i" >> $SCRIPT_DIR/$LOG_FILE
