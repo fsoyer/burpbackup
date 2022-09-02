@@ -21,6 +21,7 @@
 ERROR_FLAG=0
 ERROR=0
 ERRORS="ERREURS: "
+RETRY=6
 
 # Initialize global variables (can be overwritten in .conf file)
 # --------------------------------------
@@ -274,21 +275,24 @@ then
       if [ $ERROR -ne 0 ]
       then
       # in case of SSH connection error, retry it max 5 times, else exit
-         SSL_ERROR=`grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE > /dev/null && echo 0 || echo 1`
-         if [ $SSL_ERROR -eq 1 ]
+         SSL_ERROR=`grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE > /dev/null && echo 0 || echo 1`  # 1 for grep means "not found"
+         WAIT=0
+         while [ $SSL_ERROR -eq 0 -a $i -lt $RETRY ]
+         do
+            i=$((i+1))
+            echo "Backup try $i" >> $SCRIPT_DIR/$LOG_FILE
+            sed -i '/SSL connect error/d' $SCRIPT_DIR/$LOG_FILE
+            # increase sleep delay between each try
+            WAIT=$((WAIT+120))
+            sleep $(($WAIT + RANDOM % 360));
+            $BURPBIN -a b >> $SCRIPT_DIR/$LOG_FILE 2>&1
+            SSL_ERROR=`grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE > /dev/null && echo 0 || echo 1`
+         done
+         # Not successful after $RETRY retries ?
+         if [ $SSL_ERROR -eq 0 ]
          then
             ERRORS="$ERRORS ${ERROR}:"
             ERROR_FLAG=1
-         else
-             while [ $SSL_ERROR -eq 0 -a $i -lt 5 ]
-             do
-                i=$((i+1))
-                echo "Backup try $i" >> $SCRIPT_DIR/$LOG_FILE
-                sed -i '/SSL connect error/d' $SCRIPT_DIR/$LOG_FILE
-                sleep $((120 + RANDOM % 360));
-                $BURPBIN -a b >> $SCRIPT_DIR/$LOG_FILE 2>&1
-                SSL_ERROR=`grep -i "SSL connect error" $SCRIPT_DIR/$LOG_FILE > /dev/null && echo 0 || echo 1`
-             done
          fi
       fi
    else
