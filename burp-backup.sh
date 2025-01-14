@@ -74,11 +74,19 @@ if [ ! "$MYDB" -a "$MYSQLDUMP" -eq 1 ]
 then
    # Find which databases to dump, each in an individual dump file
    MYDB="mysql --execute 'show databases\G' --password='$MYSQL_PASSWORD' | grep -v row | sed -e 's/Database: //g' | grep -v mysql | grep -v information_schema | grep -v performance_schema"
+   if [ $? -ne 0 ]
+   then
+      (echo "MYSQL backup error on $HOSTNAME"| $MAILBIN "burp-backup : MYSQL BACKUP ERROR ON $SERVERNAME [on $(hostname)] $(date +%d/%m)" $MAIL_ADMIN
+   fi
 fi
 if [ ! "$PGDB" -a "$PGSQLDUMP" -eq 1 ]
 then
    # Find which databases to dump, each in an individual dump file
    PGDB="su - postgres -c 'psql -l --pset tuples_only' | awk '{print $1}' | grep -v ^$ | grep -v template | grep -v : | grep -v '|'"
+   if [ $? -ne 0 ]
+   then
+      (echo "POSTGRESQL backup error on $HOSTNAME"| $MAILBIN "burp-backup : POSTGRESQL BACKUP ERROR ON $SERVERNAME [on $(hostname)] $(date +%d/%m)" $MAIL_ADMIN
+   fi
 fi
 
 if [ ! -e $SCRIPT_DIR/$PID_FILE ]
