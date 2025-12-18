@@ -120,12 +120,12 @@ then
 
    if [ $STOPSEAFILE -eq 1 ]
    then
-      echo "Stopping Seafile" >> $SCRIPT_DIR/$LOG_FILE
-      systemctl stop seahub
-      systemctl stop seafile
+#      echo "Stopping Seafile" >> $SCRIPT_DIR/$LOG_FILE
+#      systemctl stop seahub
+#      systemctl stop seafile
 #      echo "Running Seafile garbage collector" >> $SCRIPT_DIR/$LOG_FILE
 #      su - seafile -c 'seafile-server-latest/seaf-gc.sh; exit $?'  >> $SCRIPT_DIR/$LOG_FILE
-      echo "Running Seafile check" >> $SCRIPT_DIR/$LOG_FILE
+      echo "Running Seafile check instead of garbage collector" >> $SCRIPT_DIR/$LOG_FILE
       su - seafile -c 'seafile-server-latest/seaf-fsck.sh; exit $?'  >> $SCRIPT_DIR/$LOG_FILE
       ERROR=$?
       if [ $ERROR -ne 0 ]
@@ -313,6 +313,9 @@ then
 
    if [ $STOPSEAFILE -eq 1 ]
    then
+      # ensure Seafile is stopped before removing cache
+      systemctl stop seahub
+	  systemctl stop seafile
       echo "Clearing Seahub cache" >> $SCRIPT_DIR/$LOG_FILE
       su - seafile -c 'rm -rf /tmp/seahub_cache.old; mv /tmp/seahub_cache /tmp/seahub_cache.old'  >> $SCRIPT_DIR/$LOG_FILE
       echo "Starting Seafile" >> $SCRIPT_DIR/$LOG_FILE
