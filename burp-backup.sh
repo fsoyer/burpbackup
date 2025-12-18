@@ -123,8 +123,10 @@ then
       echo "Stopping Seafile" >> $SCRIPT_DIR/$LOG_FILE
       systemctl stop seahub
       systemctl stop seafile
-      echo "Running Seafile garbage collector" >> $SCRIPT_DIR/$LOG_FILE
-      su - seafile -c 'seafile-server-latest/seaf-gc.sh; exit $?'  >> $SCRIPT_DIR/$LOG_FILE
+#      echo "Running Seafile garbage collector" >> $SCRIPT_DIR/$LOG_FILE
+#      su - seafile -c 'seafile-server-latest/seaf-gc.sh; exit $?'  >> $SCRIPT_DIR/$LOG_FILE
+      echo "Running Seafile check" >> $SCRIPT_DIR/$LOG_FILE
+      su - seafile -c 'seafile-server-latest/seaf-fsck.sh; exit $?'  >> $SCRIPT_DIR/$LOG_FILE
       ERROR=$?
       if [ $ERROR -ne 0 ]
       then
